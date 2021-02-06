@@ -10,7 +10,7 @@ PORT = 9090
 class Client:
 
 	def __init__(self, host, port):
-		self.sock = socket(socket.AF_INET, socket.SOCK_STREAM)
+		self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		self.sock.connect((host, port))
 
 		msg = tkinter.Tk()
@@ -21,8 +21,8 @@ class Client:
 		self.gui_done = False
 		self.running = True
 
-		gui_thread = threading.Thread(target=gui_loop)
-		receive_thread = threading.Thread(target=receive)
+		gui_thread = threading.Thread(target=self.gui_loop)
+		receive_thread = threading.Thread(target=self.receive)
 
 		gui_thread.start()
 		receive_thread.start()
@@ -35,7 +35,7 @@ class Client:
 		self.chat_label.config(font=("Ariel", 12))
 		self.chat_label.pack(padx=20, pady=5)
 
-		self.text_area = tkinter.scrolledtext.scrolledtext(self.win)
+		self.text_area = tkinter.scrolledtext.ScrolledText(self.win)
 		self.text_area.pack(padx=20, pady=5)
 		self.text_area.config(state='disabled')
 
@@ -44,11 +44,11 @@ class Client:
 		self.msg_label.pack(padx=20, pady=5)
 
 		self.input_area = tkinter.Text(self.win, height=5)
-		self.input_area(padx=20, pady=5)
+		self.input_area.pack(padx=20, pady=5)
 
 		self.send_button = tkinter.Button(self.win, text="Send", command=self.write)
 		self.send_button.config(font=("Ariel", 12))
-		self.send_button(padx=20, pady=5)
+		self.send_button.pack(padx=20, pady=5)
 
 		self.gui_done = True
 
@@ -67,11 +67,11 @@ class Client:
 		self.sock.close()
 		exit(0)
 
-	def receive(slef):
+	def receive(self):
 		while self.running:
 			try:
 				message = self.sock.recv(1024)
-				if message = 'NICK':
+				if message == "NICK":
 					self.sock.send(self.nickname.encode('utf-8'))
 				else:
 					if self.gui_done:
