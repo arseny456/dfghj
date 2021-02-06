@@ -16,15 +16,15 @@ def broadcast(message):
 	for client in clients:
 		client.send(message);
 
-def handle():
+def handle(client):
 	while True:
 		try:
 			message = client.recv(1024)
-			print(f"{nickname[clients.index(client)]} says {message}")
+			print(f"{nicknames[clients.index(client)]} says {message}")
 			broadcast(message)
 		except:
 			index = clients.index(client)
-			nicknames.pop(clients.pop(index))
+			nicknames.pop(index)
 			clients.remove(client)
 			break
 
